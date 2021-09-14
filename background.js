@@ -6,12 +6,12 @@ browser.menus.onClicked.addListener(async (info, tab) => {
   }
 
   let linkText = info.linkText;
-  if (info.modifiers &&
-      info.modifiers.length == 1 &&
-      info.modifiers[0] == "Shift") {
-    let result;
+  let link = info.link;
+  if (info.modifiers && info.modifiers.length == 1 && info.modifiers[0] == "Shift") {
+    let resultText;
+    let resultLink;
     try {
-      result = await browser.tabs.executeScript(tab.id, {
+      resultText = await browser.tabs.executeScript(tab.id, {
         frameId: info.frameId,
         code: `
           var title = "";
@@ -34,24 +34,51 @@ browser.menus.onClicked.addListener(async (info, tab) => {
     catch(ex) {
       console.error(ex);
     }
-    if (result &&
-        result[0] != "" &&
-        result[0] != linkText) {
-      linkText = result[0];
+    try {
+      resultLink = await browser.tabs.executeScript(tab.id, {
+        frameId: info.frameId,
+        code: `
+          var link = "";
+          var elem = browser.menus.getTargetElement(${info.targetElementId});
+          while (elem) {
+            const elemLink = elem.href || elem.hasAttribute("href") || elem.hasAttributeNS("http://www.w3.org/1999/xlink", "href");
+            if (elemLink) {
+              link = elemLink;
+              break;
+            }
+            elem = elem.parentElement;
+          }
+          link;
+        `,
+      });
+    }
+    catch(ex) {
+      console.error(ex);
+    }
+    if (resultText && resultText[0] != "" && resultText[0] != linkText) { 
+      linkText = resultText[0]; 
+    }
+    if (resultLink && resultLink[0] != "" && resultLink[0] != link) { 
+      link = resultLink[0]; 
     }
   }
 
   linkText = JSON.stringify(linkText)
                  .replace(/^"|"$/g, "")
                  .replace(/\\(?=")/g, "");
+  link = JSON.stringify(linkText)
+  .replace(/^"|"$/g, "")
+  .replace(/\\(?=")/g, "");
 
-  navigator.clipboard.writeText(linkText).catch(() => {
+  const textToCopy = `- [${linkText}](${link})`;
+  
+  navigator.clipboard.writeText(textToCopy).catch(() => {
     console.error("Failed to copy the link text.");
   });
 });
 
 browser.menus.create({
-  id: "copy-link-text",
+  id: "copy-gitlab-todo",
   title: browser.i18n.getMessage("contextMenuItemLink"),
   contexts: ["link"],
 });

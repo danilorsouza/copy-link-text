@@ -1,8 +1,8 @@
 {
-  "description": "Copy the text of the link.",
-  "manifest_version": 2,
-  "name": "Copy Link Text",
-  "version": "1.6.0",
+  "description": "Copies the link and text as a markdown link with a bullet point: - [link text](link)",
+  "manifest_version": 1,
+  "name": "Copy Link & Text as markdown link",
+  "version": "1.0.0",
   "default_locale": "en",
 
   "applications": {
