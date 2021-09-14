@@ -1,7 +1,7 @@
 "use strict";
 
 browser.menus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId != "copy-link-text") {
+  if (info.menuItemId != "copy-gitlab-todo") {
     return;
   }
 
