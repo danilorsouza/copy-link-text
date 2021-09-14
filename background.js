@@ -6,7 +6,7 @@ browser.menus.onClicked.addListener(async (info, tab) => {
   }
 
   let linkText = info.linkText;
-  let link = info.link;
+  let link = info.linkUrl;
   if (info.modifiers && info.modifiers.length == 1 && info.modifiers[0] == "Shift") {
     let resultText;
     let resultLink;
@@ -66,7 +66,7 @@ browser.menus.onClicked.addListener(async (info, tab) => {
   linkText = JSON.stringify(linkText)
                  .replace(/^"|"$/g, "")
                  .replace(/\\(?=")/g, "");
-  link = JSON.stringify(linkText)
+  link = JSON.stringify(link)
   .replace(/^"|"$/g, "")
   .replace(/\\(?=")/g, "");
 
