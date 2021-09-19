@@ -2,7 +2,7 @@
   "description": "Copies the link and text as a markdown link with a bullet point.",
   "manifest_version": 2,
   "name": "Copy Link & Text as markdown link",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "default_locale": "en",
 
   "applications": {
